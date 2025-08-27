@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_chat_app/components/my_button.dart';
 import 'package:qr_chat_app/components/my_text_field.dart';
+import 'package:qr_chat_app/services/auth/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -17,8 +19,30 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmPasswordController = TextEditingController();
 
   //sign up method
-  void signUp(){
-    print("Sign Up");
+  void signUp() async {
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Passwords do not match!"),
+        ),
+      );
+      return;
+    }
+
+    //get auth service
+    final authService = Provider.of<AuthService>(context, listen: false);
+    try {
+      await authService.signUpWithEmailAndPassword(
+        emailController.text,
+        passwordController.text,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
   }
 
   @override
@@ -35,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   // const SizedBox(height: 100),
                   //logo
                   Icon(
-                    Icons.message,
+                    Icons.person_pin_sharp,
                     size: 100,
                     color: Colors.grey[800],
                   ),

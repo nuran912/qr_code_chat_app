@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_chat_app/components/my_button.dart';
 import 'package:qr_chat_app/components/my_text_field.dart';
+import 'package:qr_chat_app/services/auth/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -16,8 +18,22 @@ class _LoginPageState extends State<LoginPage> {
   final passwordController = TextEditingController();
 
   //sign in method
-  void signIn() {
-    print("Sign In");
+  void signIn() async {
+    //get auth service
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    try {
+      await authService.signInWithEmailAndPassword(
+        emailController.text,
+        passwordController.text,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
   }
 
   @override
@@ -33,11 +49,14 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 // const SizedBox(height: 100),
                 //logo
-                Icon(Icons.message, size: 100, color: Colors.grey[800]),
+                Icon(Icons.assignment_ind,
+                    size: 100,
+                    color: Colors.grey[800]
+                ),
                 const SizedBox(height: 50),
 
                 Text(
-                  "Welcome Back you\'ve been missed",
+                  "Welcome Back you've been missed",
                   style: TextStyle(fontSize: 16),
                 ),
 
