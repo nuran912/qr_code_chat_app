@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:qr_chat_app/widgets/qr_code_page.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
-void showQRScannerPopUp(BuildContext context) {
+Future<String?> showQRScannerPopUp(BuildContext context) async {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   String scannedData = "";
 
-  showDialog(
+  return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       return StatefulBuilder(
@@ -19,8 +19,7 @@ void showQRScannerPopUp(BuildContext context) {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.photo_camera,
-                          size: 30, color: Colors.black),
+                      const Icon(Icons.photo_camera, size: 30, color: Colors.black),
                       const SizedBox(height: 3),
                       Container(
                         height: 4,
@@ -42,13 +41,10 @@ void showQRScannerPopUp(BuildContext context) {
                     children: [
                       InkWell(
                         onTap: () {
-                          // Close current dialog first
                           Navigator.of(context, rootNavigator: true).pop();
-                          // Then open QR generator
                           Future.microtask(() => showQRPopUp(context));
                         },
-                        child: Icon(Icons.qr_code_2,
-                            size: 30, color: Colors.grey[500]),
+                        child: Icon(Icons.qr_code_2, size: 30, color: Colors.grey[500]),
                       ),
                       const SizedBox(height: 3),
                       Container(
@@ -85,7 +81,6 @@ void showQRScannerPopUp(BuildContext context) {
                             controller?.scannedDataStream.listen((scanData) {
                               setState(() {
                                 scannedData = scanData.code ?? "";
-                                print("Scanned Data: ${scannedData}");
                               });
 
                               if (scannedData.isNotEmpty) {
@@ -98,9 +93,7 @@ void showQRScannerPopUp(BuildContext context) {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        scannedData.isEmpty
-                            ? "Scan a QR code"
-                            : "Result: $scannedData",
+                        scannedData.isEmpty ? "Scan a QR code" : "Result: $scannedData",
                         style: const TextStyle(fontSize: 14),
                       ),
                     ],
