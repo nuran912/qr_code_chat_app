@@ -28,18 +28,19 @@ class _LoginPageState extends State<LoginPage> {
         passwordController.text,
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final neonGreen = const Color(0xFF39FF14);
+    final bgDark = const Color.fromARGB(255, 0, 20, 49);
+
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: bgDark,
       body: SafeArea(
         child: Center(
           child: Padding(
@@ -47,55 +48,47 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // const SizedBox(height: 100),
-                //logo
-                Icon(Icons.assignment_ind,
-                    size: 100,
-                    color: Colors.grey[800]
-                ),
-                const SizedBox(height: 50),
-
+                Icon(Icons.assignment_ind, size: 100, color: neonGreen),
+                const SizedBox(height: 40),
                 Text(
-                  "Welcome Back you've been missed",
-                  style: TextStyle(fontSize: 16),
+                  "Welcome Back! You've been missed",
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: neonGreen,
+                    fontWeight: FontWeight.bold,
+                    // shadows: [Shadow(color: neonGreen, blurRadius: 10)],
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-
-                const SizedBox(height: 25),
-
-                //email text field
+                const SizedBox(height: 30),
                 MyTextField(
                   controller: emailController,
                   hintText: "Email",
                   obscureText: false,
                 ),
-                const SizedBox(height: 10),
-
-                // password text field
+                const SizedBox(height: 16),
                 MyTextField(
                   controller: passwordController,
                   hintText: "Password",
                   obscureText: true,
                 ),
-                const SizedBox(height: 25),
-
-                //sign in button
+                const SizedBox(height: 30),
                 MyButton(onTap: signIn, text: "Sign In"),
-
-                const SizedBox(height: 25),
-
-                //not a member? Register
+                const SizedBox(height: 30),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Not a Member?'),
+                    Text('Not a Member? ', style: TextStyle(color: neonGreen)),
                     const SizedBox(width: 4),
                     GestureDetector(
                       onTap: widget.onTap,
-                      child: const Text(
+                      child: Text(
                         "Register Now",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: neonGreen,
                           fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          // shadows: [Shadow(color: neonGreen, blurRadius: 10)],
                         ),
                       ),
                     ),

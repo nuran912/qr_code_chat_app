@@ -4,14 +4,17 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:qr_chat_app/widgets/qr_scanner_page.dart';
 
 void showQRPopUp(BuildContext context) {
-
   final user = FirebaseAuth.instance.currentUser;
   final userId = user!.uid;
 
+  final neonGreen = const Color(0xFF39FF14);
+  final bgDark = const Color.fromARGB(255, 0, 20, 49);
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        
+        backgroundColor: bgDark,
         title: Row(
           children: [
             Expanded(
@@ -20,20 +23,21 @@ void showQRPopUp(BuildContext context) {
                 children: [
                   InkWell(
                     onTap: () {
-                      // Close current dialog first
                       Navigator.of(context, rootNavigator: true).pop();
-                      // Then open scanner dialog
                       Future.microtask(() => showQRScannerPopUp(context));
                     },
-                    child: Icon(Icons.photo_camera,
-                        size: 30, color: Colors.grey[500]),
+                    child: Icon(
+                      Icons.photo_camera,
+                      size: 30,
+                      color: neonGreen.withOpacity(0.5),
+                    ),
                   ),
                   const SizedBox(height: 3),
                   Container(
                     height: 4,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey[500],
+                      color: neonGreen.withOpacity(0.5),
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(4),
                         bottomLeft: Radius.circular(4),
@@ -47,14 +51,14 @@ void showQRPopUp(BuildContext context) {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.qr_code_2, size: 30),
+                  Icon(Icons.qr_code_2, size: 30, color: neonGreen),
                   const SizedBox(height: 3),
                   Container(
                     height: 4,
                     width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      color: neonGreen,
+                      borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(4),
                         bottomRight: Radius.circular(4),
                       ),
@@ -79,6 +83,8 @@ void showQRPopUp(BuildContext context) {
                   version: QrVersions.auto,
                   size: 200,
                   gapless: false,
+                  foregroundColor: neonGreen,
+                  backgroundColor: Color.fromARGB(255, 0, 20, 49),
                 ),
               ),
             ),
@@ -87,7 +93,7 @@ void showQRPopUp(BuildContext context) {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Close"),
+            child: Text("Close", style: TextStyle(color: neonGreen)),
           ),
         ],
       );
