@@ -14,22 +14,25 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final neonGreen = const Color(0xFF39FF14);
     return TextField(
       controller: controller,
       obscureText: obscureText,
+      style: TextStyle(color: neonGreen),
       decoration: InputDecoration(
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: neonGreen.withOpacity(0.7)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: neonGreen, width: 2),
         ),
-        fillColor: Colors.grey[200],
+        fillColor: const Color.fromARGB(255, 0, 32, 79),
         filled: true,
         hintText: hintText,
-        hintStyle: TextStyle(color: Colors.grey[500]),
+        hintStyle: TextStyle(color: neonGreen.withOpacity(0.5)),
       ),
     );
   }
 }
-

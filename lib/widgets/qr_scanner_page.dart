@@ -7,26 +7,30 @@ Future<String?> showQRScannerPopUp(BuildContext context) async {
   QRViewController? controller;
   String scannedData = "";
 
+  final neonGreen = const Color(0xFF39FF14);
+  final bgDark = const Color.fromARGB(255, 0, 20, 49);
   return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
+            
+            backgroundColor: bgDark,
             title: Row(
               children: [
                 Expanded(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.photo_camera, size: 30, color: Colors.black),
+                      Icon(Icons.photo_camera, size: 30, color: neonGreen),
                       const SizedBox(height: 3),
                       Container(
                         height: 4,
                         width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.only(
+                        decoration: BoxDecoration(
+                          color: neonGreen,
+                          borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(4),
                             bottomRight: Radius.circular(4),
                           ),
@@ -44,14 +48,18 @@ Future<String?> showQRScannerPopUp(BuildContext context) async {
                           Navigator.of(context, rootNavigator: true).pop();
                           Future.microtask(() => showQRPopUp(context));
                         },
-                        child: Icon(Icons.qr_code_2, size: 30, color: Colors.grey[500]),
+                        child: Icon(
+                          Icons.qr_code_2,
+                          size: 30,
+                          color: neonGreen.withOpacity(0.5),
+                        ),
                       ),
                       const SizedBox(height: 3),
                       Container(
                         height: 4,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.grey[500],
+                          color: neonGreen.withOpacity(0.5),
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(4),
                             bottomLeft: Radius.circular(4),
@@ -93,8 +101,10 @@ Future<String?> showQRScannerPopUp(BuildContext context) async {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        scannedData.isEmpty ? "Scan a QR code" : "Result: $scannedData",
-                        style: const TextStyle(fontSize: 14),
+                        scannedData.isEmpty
+                            ? "Scan a QR code"
+                            : "Result: $scannedData",
+                        style: TextStyle(fontSize: 14, color: neonGreen),
                       ),
                     ],
                   ),
@@ -107,7 +117,7 @@ Future<String?> showQRScannerPopUp(BuildContext context) async {
                   controller?.dispose();
                   Navigator.of(context).pop();
                 },
-                child: const Text("Close"),
+                child: Text("Close", style: TextStyle(color: neonGreen)),
               ),
             ],
           );

@@ -12,6 +12,7 @@ class ChatPage extends StatefulWidget {
   @override
   State<ChatPage> createState() => _ChatPageState();
 }
+
 class _ChatPageState extends State<ChatPage> {
   final ChatService _chatService = ChatService();
   final TextEditingController _messageController = TextEditingController();
@@ -53,14 +54,20 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    final neonGreen = const Color(0xFF39FF14);
+    final bgDark = const Color.fromARGB(255, 0, 20, 49);
+    final appBarDark = const Color.fromARGB(255, 0, 32, 79);
+    final cardDark = const Color.fromARGB(255, 0, 40, 100);
 
     return Scaffold(
+      backgroundColor: bgDark,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: appBarDark,
         title: Text(
           _otherUserEmail ?? "Loading...",
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: neonGreen, fontWeight: FontWeight.bold),
         ),
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -69,11 +76,18 @@ class _ChatPageState extends State<ChatPage> {
               stream: _chatService.getMessages(widget.chatId),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return const Center(child: Text("Error loading messages"));
+                  return Center(
+                    child: Text(
+                      "Error loading messages",
+                      style: TextStyle(color: neonGreen),
+                    ),
+                  );
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF39FF14)),
+                  );
                 }
 
                 final messages = snapshot.data!.docs;
@@ -85,19 +99,33 @@ class _ChatPageState extends State<ChatPage> {
                     final message = messages[index];
                     final isMe = message['senderId'] == currentUserId;
 
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                    return Align(
+                      alignment: isMe
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       child: Container(
-                        padding: const EdgeInsets.all(12),
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 6,
+                        ),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: isMe ? Colors.black : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8),
+                          color: isMe ? neonGreen : appBarDark,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: isMe
+                              ? [
+                                  BoxShadow(
+                                    color: neonGreen.withOpacity(0.5),
+                                    blurRadius: 1,
+                                  ),
+                                ]
+                              : [],
                         ),
                         child: Text(
                           message['text'],
                           style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black,
+                            color: isMe ? Colors.black : neonGreen,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -107,25 +135,41 @@ class _ChatPageState extends State<ChatPage> {
               },
             ),
           ),
-          const Divider(height: 1),
+          const Divider(height: 1, color: Colors.grey),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            color: cardDark,
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _messageController,
-                    decoration: const InputDecoration(
+                    style: TextStyle(color: neonGreen),
+                    decoration: InputDecoration(
                       hintText: "Type a message",
-                      border: InputBorder.none,
+                      hintStyle: TextStyle(color: neonGreen.withOpacity(0.7)),
+                      filled: true,
+                      fillColor: bgDark,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: neonGreen),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: neonGreen, width: 2),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: neonGreen),
+                      ),
                     ),
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send, color: Colors.black),
+                  icon: Icon(Icons.send, color: neonGreen),
                   onPressed: _sendMessage,
+                  tooltip: "Send",
                 ),
               ],
             ),
