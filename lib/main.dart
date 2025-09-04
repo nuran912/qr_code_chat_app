@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:qr_chat_app/firebase_options.dart';
 import 'package:qr_chat_app/services/auth/auth_gate.dart';
 import 'package:qr_chat_app/services/auth/auth_service.dart';
+import 'package:qr_chat_app/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final neonGreen = const Color(0xFF39FF14);
-    final bgDark = const Color.fromARGB(255, 0, 20, 49);
-    final appBarDark = const Color.fromARGB(255, 0, 32, 79);
     final cardDark = const Color.fromARGB(255, 0, 40, 100);
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -80,7 +78,31 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: AuthGate(),
+      home: const SplashScreenWrapper(),
     );
+  }
+}
+
+class SplashScreenWrapper extends StatefulWidget {
+  const SplashScreenWrapper({super.key});
+
+  @override
+  State<SplashScreenWrapper> createState() => _SplashScreenWrapperState();
+}
+
+class _SplashScreenWrapperState extends State<SplashScreenWrapper> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 5), () {
+      Navigator.of(
+        context,
+      ).pushReplacement(MaterialPageRoute(builder: (_) => AuthGate()));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const SplashPage();
   }
 }
