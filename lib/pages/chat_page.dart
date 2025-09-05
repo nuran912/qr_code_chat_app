@@ -136,42 +136,70 @@ class _ChatPageState extends State<ChatPage> {
             ),
           ),
           const Divider(height: 1, color: Colors.grey),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-            color: cardDark,
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    style: TextStyle(color: neonGreen),
-                    decoration: InputDecoration(
-                      hintText: "Type a message",
-                      hintStyle: TextStyle(color: neonGreen.withOpacity(0.7)),
-                      filled: true,
-                      fillColor: bgDark,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: neonGreen),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: neonGreen, width: 2),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: neonGreen),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                left: 8,
+                right: 8,
+                bottom: 8,
+                top: 4,
+              ),
+              child: Container(
+                color: cardDark,
+                child: Row(
+                  children: [
+                    Flexible(
+                      child: TextField(
+                        controller: _messageController,
+                        style: TextStyle(color: neonGreen),
+                        decoration: InputDecoration(
+                          hintText: "Type a message",
+                          hintStyle: TextStyle(
+                            color: neonGreen.withOpacity(0.7),
+                          ),
+                          filled: true,
+                          fillColor: bgDark,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: neonGreen),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: neonGreen, width: 2),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: neonGreen),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
+                          ),
+                        ),
+                        onSubmitted: (_) => _sendMessage(),
+                        minLines: 1,
+                        maxLines: 4,
+                        textInputAction: TextInputAction.send,
                       ),
                     ),
-                    onSubmitted: (_) => _sendMessage(),
-                  ),
+                    SizedBox(width: 4),
+                    Container(
+                      height: 48,
+                      width: 48,
+                      margin: const EdgeInsets.only(left: 4),
+                      child: Material(
+                        color: neonGreen,
+                        borderRadius: BorderRadius.circular(12),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(12),
+                          onTap: _sendMessage,
+                          child: Icon(Icons.send, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                IconButton(
-                  icon: Icon(Icons.send, color: neonGreen),
-                  onPressed: _sendMessage,
-                  tooltip: "Send",
-                ),
-              ],
+              ),
             ),
           ),
         ],
