@@ -23,7 +23,7 @@ class SplashPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'QR Chat App',
+              'Chat Box',
               style: TextStyle(
                 color: neonGreen,
                 fontSize: 28,

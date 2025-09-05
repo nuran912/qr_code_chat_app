@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_chat_app/services/chat_service.dart';
+import 'package:chat_box/services/chat_service.dart';
 
 class ChatPage extends StatefulWidget {
   final String chatId;
@@ -18,19 +18,12 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  String? _otherUserEmail; // state variable
-
-  @override
-  void initState() {
-    super.initState();
-    _loadOtherUserEmail();
-  }
-
-  Future<void> _loadOtherUserEmail() async {
-    final email = await _chatService.getUserEmailById(widget.otherUserId);
-    setState(() {
-      _otherUserEmail = email ?? "Unknown";
-    });
+  Future<String?> _getOtherUsername(String uid) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get();
+    return doc.data()?['username'] ?? '';
   }
 
   // Send message
@@ -63,9 +56,15 @@ class _ChatPageState extends State<ChatPage> {
       backgroundColor: bgDark,
       appBar: AppBar(
         backgroundColor: appBarDark,
-        title: Text(
-          _otherUserEmail ?? "Loading...",
-          style: TextStyle(color: neonGreen, fontWeight: FontWeight.bold),
+        title: FutureBuilder<String?>(
+          future: _getOtherUsername(widget.otherUserId),
+          builder: (context, snapshot) {
+            final username = snapshot.data ?? "";
+            return Text(
+              username.isNotEmpty ? username : "...",
+              style: TextStyle(color: neonGreen, fontWeight: FontWeight.bold),
+            );
+          },
         ),
         elevation: 0,
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_chat_app/widgets/qr_code_page.dart';
+import 'package:chat_box/widgets/qr_code_page.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 
 Future<String?> showQRScannerPopUp(BuildContext context) async {

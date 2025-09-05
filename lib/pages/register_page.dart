@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_chat_app/components/my_button.dart';
-import 'package:qr_chat_app/components/my_text_field.dart';
-import 'package:qr_chat_app/services/auth/auth_service.dart';
+import 'package:chat_box/components/my_button.dart';
+import 'package:chat_box/components/my_text_field.dart';
+import 'package:chat_box/services/auth/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -13,7 +13,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  //text controller
+  //text controllers
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -27,12 +28,20 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
+    if (usernameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Username cannot be empty!")),
+      );
+      return;
+    }
+
     //get auth service
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
       await authService.signUpWithEmailAndPassword(
         emailController.text,
         passwordController.text,
+        usernameController.text.trim(),
       );
     } catch (e) {
       ScaffoldMessenger.of(
@@ -67,6 +76,12 @@ class _RegisterPageState extends State<RegisterPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 30),
+                MyTextField(
+                  controller: usernameController,
+                  hintText: "Username",
+                  obscureText: false,
+                ),
+                const SizedBox(height: 16),
                 MyTextField(
                   controller: emailController,
                   hintText: "Email",
