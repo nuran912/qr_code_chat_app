@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:chat_box/components/my_button.dart';
 import 'package:chat_box/components/my_text_field.dart';
 import 'package:chat_box/services/auth/auth_service.dart';
+import 'package:chat_box/components/error_box.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -13,24 +14,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  //text controller
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  String? errorMessage;
 
-  //sign in method
   void signIn() async {
-    //get auth service
+    setState(() => errorMessage = null);
     final authService = Provider.of<AuthService>(context, listen: false);
-
     try {
       await authService.signInWithEmailAndPassword(
         emailController.text,
         passwordController.text,
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      setState(() {
+        errorMessage = e.toString().replaceAll('Exception:', '').trim();
+      });
     }
   }
 
@@ -56,11 +55,13 @@ class _LoginPageState extends State<LoginPage> {
                     fontSize: 20,
                     color: neonGreen,
                     fontWeight: FontWeight.bold,
-                    // shadows: [Shadow(color: neonGreen, blurRadius: 10)],
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 24),
+                if (errorMessage != null && errorMessage!.isNotEmpty)
+                  ErrorBox(message: errorMessage!, textColor: Colors.red),
+                const SizedBox(height: 16),
                 MyTextField(
                   controller: emailController,
                   hintText: "Email",
@@ -88,7 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                           color: neonGreen,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
-                          // shadows: [Shadow(color: neonGreen, blurRadius: 10)],
                         ),
                       ),
                     ),

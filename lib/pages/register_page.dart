@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:chat_box/components/my_button.dart';
 import 'package:chat_box/components/my_text_field.dart';
 import 'package:chat_box/services/auth/auth_service.dart';
+import 'package:chat_box/components/error_box.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -13,29 +14,28 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  //text controllers
   final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  String? errorMessage;
 
-  //sign up method
   void signUp() async {
+    setState(() => errorMessage = null);
     if (passwordController.text != confirmPasswordController.text) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Passwords do not match!")));
+      setState(() {
+        errorMessage = "Passwords do not match!";
+      });
       return;
     }
 
     if (usernameController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Username cannot be empty!")),
-      );
+      setState(() {
+        errorMessage = "Username cannot be empty!";
+      });
       return;
     }
 
-    //get auth service
     final authService = Provider.of<AuthService>(context, listen: false);
     try {
       await authService.signUpWithEmailAndPassword(
@@ -44,9 +44,9 @@ class _RegisterPageState extends State<RegisterPage> {
         usernameController.text.trim(),
       );
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(e.toString())));
+      setState(() {
+        errorMessage = e.toString().replaceAll('Exception:', '').trim();
+      });
     }
   }
 
@@ -71,11 +71,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     fontSize: 20,
                     color: neonGreen,
                     fontWeight: FontWeight.bold,
-                    // shadows: [Shadow(color: neonGreen, blurRadius: 10)],
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 24),
+                if (errorMessage != null && errorMessage!.isNotEmpty)
+                  ErrorBox(message: errorMessage!, textColor: Colors.red),
                 MyTextField(
                   controller: usernameController,
                   hintText: "Username",
@@ -118,7 +119,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           color: neonGreen,
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
-                          // shadows: [Shadow(color: neonGreen, blurRadius: 10)],
                         ),
                       ),
                     ),

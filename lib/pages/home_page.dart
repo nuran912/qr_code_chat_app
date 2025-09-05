@@ -17,10 +17,39 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final ChatService _chatService = ChatService();
 
-  // Sign out method
-  void signOut() {
+  // Sign out method with loading dialog
+  Future<void> signOut() async {
+    final neonGreen = const Color(0xFF39FF14);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: neonGreen),
+              const SizedBox(width: 18),
+              Text(
+                "Logging out...",
+                style: TextStyle(
+                  color: neonGreen,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await Future.delayed(const Duration(seconds: 3));
+    if (mounted) Navigator.of(context, rootNavigator: true).pop();
     final authService = Provider.of<AuthService>(context, listen: false);
-    authService.signOut();
+    await authService.signOut();
   }
 
   // Handle QR scan result → open/create chat
