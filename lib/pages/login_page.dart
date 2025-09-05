@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_chat_app/components/my_button.dart';
-import 'package:qr_chat_app/components/my_text_field.dart';
-import 'package:qr_chat_app/services/auth/auth_service.dart';
+import 'package:chat_box/components/my_button.dart';
+import 'package:chat_box/components/my_text_field.dart';
+import 'package:chat_box/services/auth/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;

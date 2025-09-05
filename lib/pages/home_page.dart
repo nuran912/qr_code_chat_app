@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_chat_app/widgets/qr_scanner_page.dart';
-import 'package:qr_chat_app/services/auth/auth_service.dart';
-import 'package:qr_chat_app/services/chat_service.dart';
+import 'package:chat_box/widgets/qr_scanner_page.dart';
+import 'package:chat_box/services/auth/auth_service.dart';
+import 'package:chat_box/services/chat_service.dart';
 import 'chat_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,22 +46,35 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<String?> _getCurrentUsername(String uid) async {
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .get();
+    return doc.data()?['username'] ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
-    final currentUserEmail = currentUser!.email;
     final neonGreen = const Color(0xFF39FF14);
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 20, 49),
       appBar: AppBar(
-        title: Text(
-          "$currentUserEmail",
-          style: TextStyle(
-            color: neonGreen,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
+        title: FutureBuilder<String?>(
+          future: _getCurrentUsername(currentUser!.uid),
+          builder: (context, snapshot) {
+            final username = snapshot.data ?? "";
+            return Text(
+              username.isNotEmpty ? username : "...",
+              style: TextStyle(
+                color: neonGreen,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            );
+          },
         ),
         backgroundColor: Color.fromARGB(255, 0, 32, 79),
         centerTitle: true,
@@ -72,14 +86,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         elevation: 0,
-        // toolbarHeight: kToolbarHeight + 15,
-        
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(4),
-          child: Container(
-            color: neonGreen,
-            height: 5,
-          ),
+          child: Container(color: neonGreen, height: 5),
         ),
       ),
 
@@ -132,7 +141,7 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           }
-          
+
           return ListView.builder(
             itemCount: chatDocs.length,
             itemBuilder: (context, index) {
@@ -152,7 +161,6 @@ class _HomePageState extends State<HomePage> {
 
                   final otherUserId = userSnapshot.data!;
 
-                  
                   return FutureBuilder<String?>(
                     future: _chatService.getUserEmailById(otherUserId),
                     builder: (context, emailSnapshot) {

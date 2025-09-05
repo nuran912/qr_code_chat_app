@@ -55,10 +55,10 @@ class ChatService {
     try {
       final userDoc = await _firestore.collection('users').doc(userId).get();
       if (userDoc.exists) {
-        return userDoc.data()?['email'];
+        return userDoc.data()?['username'] ?? '...';
       }
     } catch (e) {
-      print("Error fetching user email: $e");
+      print("Error fetching user username: $e");
     }
     return null;
   }

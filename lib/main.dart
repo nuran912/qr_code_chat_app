@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_chat_app/firebase_options.dart';
-import 'package:qr_chat_app/services/auth/auth_gate.dart';
-import 'package:qr_chat_app/services/auth/auth_service.dart';
-import 'package:qr_chat_app/pages/splash_page.dart';
+import 'package:chat_box/firebase_options.dart';
+import 'package:chat_box/services/auth/auth_gate.dart';
+import 'package:chat_box/services/auth/auth_service.dart';
+import 'package:chat_box/pages/splash_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -11,24 +11,20 @@ class AuthService extends ChangeNotifier {
 
   // sign user in
   Future<UserCredential> signInWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     try {
-      UserCredential userCredential =
-          await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
 
       final user = userCredential.user;
       if (user != null) {
         // add a new document if it doesn't already exist
-        await _firestore.collection('users').doc(user.uid).set(
-          {
-            'uid': user.uid,
-            'email': user.email,
-          },
-          SetOptions(merge: true),
-        );
+        await _firestore.collection('users').doc(user.uid).set({
+          'uid': user.uid,
+          'email': user.email,
+        }, SetOptions(merge: true));
 
         print("User signed in: ${user.uid}");
       }
@@ -41,13 +37,13 @@ class AuthService extends ChangeNotifier {
 
   // create a new user
   Future<UserCredential> signUpWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+    String username,
+  ) async {
     try {
-      UserCredential userCredential =
-          await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       final user = userCredential.user;
       if (user != null) {
@@ -55,10 +51,11 @@ class AuthService extends ChangeNotifier {
         await _firestore.collection("users").doc(user.uid).set({
           'uid': user.uid,
           'email': user.email,
+          'username': username,
         });
       }
 
-      print("User signed up: ${user?.uid}");
+      print("User signed up: \\${user?.uid}");
 
       return userCredential;
     } on FirebaseAuthException catch (e) {
